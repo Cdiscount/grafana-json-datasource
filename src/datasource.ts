@@ -15,18 +15,25 @@ import { getTemplateSrv } from '@grafana/runtime';
 import jsonata from 'jsonata';
 import { JSONPath } from 'jsonpath-plus';
 import _ from 'lodash';
-import API from './api';
+
 import { detectFieldType } from './detectFieldType';
 import { parseValues } from './parseValues';
-import { JsonApiDataSourceOptions, JsonApiQuery, Pair } from './types';
+import { JsonApiDataSourceOptions, JsonApiQuery } from './types';
 
 export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourceOptions> {
-  api: API;
+  data: Object;
+  isValid: boolean;
 
   constructor(instanceSettings: DataSourceInstanceSettings<JsonApiDataSourceOptions>) {
     super(instanceSettings);
 
-    this.api = new API(instanceSettings.url!, instanceSettings.jsonData.queryParams || '');
+    try {
+      this.data = JSON.parse(instanceSettings.jsonData.data || '{}');
+      this.isValid = true;
+    } catch (err: any) {
+      this.isValid = false;
+      this.data = err;
+    }
   }
 
   /**
@@ -37,7 +44,7 @@ export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourc
    * name it as you like.
    */
   async metadataRequest(query: JsonApiQuery, range?: TimeRange) {
-    return this.requestJson(query, replace({}, range));
+    return this.requestJson();
   }
 
   async query(request: DataQueryRequest<JsonApiQuery>): Promise<DataQueryResponse> {
@@ -83,47 +90,24 @@ export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourc
    * Checks whether we can connect to the API.
    */
   async testDatasource() {
-    const defaultErrorMessage = 'Cannot connect to API';
-
-    try {
-      const response = await this.api.test();
-
-      if (response.status === 200) {
-        return {
-          status: 'success',
-          message: 'Success',
-        };
-      } else {
-        return {
-          status: 'error',
-          message: response.statusText ? response.statusText : defaultErrorMessage,
-        };
-      }
-    } catch (err: any) {
-      if (_.isString(err)) {
-        return {
-          status: 'error',
-          message: err,
-        };
-      } else {
-        let message = 'JSON API: ';
-        message += err.statusText ? err.statusText : defaultErrorMessage;
-        if (err.data && err.data.error && err.data.error.code) {
-          message += ': ' + err.data.error.code + '. ' + err.data.error.message;
-        }
-
-        return {
-          status: 'error',
-          message,
-        };
-      }
+    if (this.isValid) {
+      return {
+        status: 'success',
+        message: 'Success',
+      };
     }
+
+    return {
+      status: 'error',
+      message: `Invalid JSON: ${this.data}`,
+    };
   }
 
   async doRequest(query: JsonApiQuery, range?: TimeRange, scopedVars?: ScopedVars): Promise<DataFrame[]> {
     const replaceWithVars = replace(scopedVars, range);
 
-    const json = await this.requestJson(query, replaceWithVars);
+    // const json = await this.requestJson(query, replaceWithVars);
+    const json = Object.assign({}, this.data);
 
     if (!json) {
       throw new Error('Query returned empty data');
@@ -228,19 +212,8 @@ export class JsonDataSource extends DataSourceApi<JsonApiQuery, JsonApiDataSourc
     return res;
   }
 
-  async requestJson(query: JsonApiQuery, interpolate: (text: string) => string) {
-    const interpolateKeyValue = ([key, value]: Pair<string, string>): Pair<string, string> => {
-      return [interpolate(key), interpolate(value)];
-    };
-
-    return await this.api.cachedGet(
-      query.cacheDurationSeconds,
-      query.method,
-      interpolate(query.urlPath),
-      (query.params ?? []).map(interpolateKeyValue),
-      (query.headers ?? []).map(interpolateKeyValue),
-      interpolate(query.body)
-    );
+  requestJson() {
+    return Promise.resolve(this.data);
   }
 }
 

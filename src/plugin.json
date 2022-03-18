@@ -1,37 +1,23 @@
 {
   "$schema": "https://github.com/grafana/grafana/raw/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "JSON API",
-  "id": "marcusolsson-json-datasource",
+  "name": "JSON Local",
+  "id": "flash-json-datasource",
   "metrics": true,
   "logs": true,
   "annotations": true,
   "info": {
-    "description": "A data source plugin for loading JSON APIs into Grafana.",
+    "description": "A data source plugin for loading local JSON into Grafana.",
     "author": {
-      "name": "Marcus Olsson",
-      "email": "marcus.olsson@hey.com",
-      "url": "https://marcus.se.net"
+      "name": "Flash XPC",
+      "email": "flash_xp_client@cdiscount.com",
+      "url": "https://confluence.cdiscount.com/display/FXC/Flash+XP+client"
     },
-    "keywords": ["json", "api"],
+    "keywords": ["json", "local"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "links": [
-      {
-        "name": "Documentation",
-        "url": "https://marcusolsson.github.io/grafana-json-datasource"
-      },
-      {
-        "name": "Website",
-        "url": "https://github.com/marcusolsson/grafana-json-datasource"
-      },
-      {
-        "name": "License",
-        "url": "https://github.com/marcusolsson/grafana-json-datasource/blob/main/LICENSE"
-      }
-    ],
     "screenshots": [
       { "name": "Explore (Dark)", "path": "img/dark.png" },
       { "name": "Explore (Light)", "path": "img/light.png" }

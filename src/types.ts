@@ -40,5 +40,5 @@ export const defaultQuery: Partial<JsonApiQuery> = {
 };
 
 export interface JsonApiDataSourceOptions extends DataSourceJsonData {
-  queryParams?: string;
+  data: string;
 }
