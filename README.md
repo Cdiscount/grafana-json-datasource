@@ -1,4 +1,4 @@
-# JSON API data source for Grafana
+# JSON local data source for Grafana
 
 [![Build](https://github.com/marcusolsson/grafana-json-datasource/workflows/CI/badge.svg)](https://github.com/marcusolsson/grafana-json-datasource/actions?query=workflow%3A%22CI%22)
 [![Release](https://github.com/marcusolsson/grafana-json-datasource/workflows/Release/badge.svg)](https://github.com/marcusolsson/grafana-json-datasource/actions?query=workflow%3ARelease)
@@ -7,16 +7,10 @@
 [![License](https://img.shields.io/github/license/marcusolsson/grafana-json-datasource)](LICENSE)
 [![Twitter](https://img.shields.io/twitter/follow/marcusolsson?color=%231DA1F2&label=twitter&style=plastic)](https://twitter.com/marcusolsson)
 
-A data source plugin for loading JSON APIs into [Grafana](https://grafana.com) using [JSONPath](https://goessner.net/articles/JsonPath/).
+A data source plugin for loading local JSON into [Grafana](https://grafana.com) using [JSONPath](https://goessner.net/articles/JsonPath/).
 
 ![Screenshot](https://github.com/marcusolsson/grafana-json-datasource/raw/main/src/img/dark.png)
 
 ## Documentation
 
 Full documentation for the plugin is available on the [website](https://marcusolsson.github.io/grafana-json-datasource).
-
-## Maintenance
-
-I maintain [several plugins](https://marcus.se.net/projects/) for Grafana. While my employer allows me to spend some time on developing plugins, most of the work happens on evenings and weekends. At the moment, I'm prioritizing fixing bugs and reviewing PRs over introducing new features.
-
-If you'd still like to propose a new feature, [create a new Discussion](https://github.com/marcusolsson/grafana-json-datasource/discussions/new?category=ideas). While I likely won't be able to work on features myself, I'd be happy to accept pull requests. If you'd like to contribute a feature, please let me know before you start working on it.
